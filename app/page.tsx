@@ -1,3 +1,5 @@
+import type { Metadata } from "next";
+import AdSlot from "@/components/AdSlot";
 import Link from "next/link";
 import { guides } from "@/lib/guides";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
@@ -28,6 +30,10 @@ const TOOLS = [
     badge: "증여세",
   },
 ];
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 export default function HomePage() {
   const jsonLd = {
@@ -116,6 +122,7 @@ export default function HomePage() {
           계산되고 서버로 전송되지 않습니다.
         </p>
       </section>
+      <AdSlot slot="home-bottom" />
     </div>
   );
 }
