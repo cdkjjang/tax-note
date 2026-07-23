@@ -21,6 +21,19 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
   },
+  verification: {
+    other: {
+      "naver-site-verification": [
+        "9e7807aba29a6562dcb92fc5eddfbb08dc3ab218",
+        "21b911bbd060dac887ebb92aada8b70c1e7db7a3",
+        "96f50dbf560e8919dc444caf4fce693231823592",
+        "989e70c6bc6abfbf9666bb033354d5b0a82e03b2",
+        "d23de4095b2c5474a8f451d2d36310f6507e408c",
+        "1c3a80151a01ea020e77a0fc52790d90712d9f54",
+        "97a551bc4d5b515bf96ae4f89c180149e0b1037a",
+      ],
+    },
+  },
 };
 
 export default function RootLayout({
