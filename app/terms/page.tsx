@@ -6,7 +6,6 @@ export const metadata: Metadata = {
   title: "이용약관·면책조항",
   description: `${SITE_NAME}의 이용약관과 면책조항입니다.`,
   alternates: { canonical: "/terms" },
-  robots: { index: false },
 };
 
 export default function TermsPage() {
