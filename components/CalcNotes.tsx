@@ -126,18 +126,24 @@ export default function CalcNotes({
           결과는 참고용 추정치입니다. 확정 금액과 자격 판단은 아래에서 확인하세요.
         </p>
         <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-          {sources.map((s) => (
-            <li key={s.href}>
-              <a
-                href={s.href}
-                rel="noopener nofollow"
-                target="_blank"
-                className="text-accent underline-offset-4 hover:underline"
-              >
-                {s.label} ↗
-              </a>
-            </li>
-          ))}
+          {sources.map((s) => {
+            // 사이트 내부 경로에는 nofollow·target을 붙이지 않는다.
+            const external = s.href.startsWith("http");
+            return (
+              <li key={s.href}>
+                <a
+                  href={s.href}
+                  className="text-accent underline-offset-4 hover:underline"
+                  {...(external
+                    ? { rel: "noopener nofollow", target: "_blank" }
+                    : {})}
+                >
+                  {s.label}
+                  {external ? " ↗" : " →"}
+                </a>
+              </li>
+            );
+          })}
         </ul>
       </section>
     </div>
