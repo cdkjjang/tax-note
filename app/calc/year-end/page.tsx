@@ -3,6 +3,7 @@ import Link from "next/link";
 import YearEndCalculator from "@/components/YearEndCalculator";
 import AdSlot from "@/components/AdSlot";
 import CalcNotes from "@/components/CalcNotes";
+import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "연말정산 환급 계산기 — 총급여·공제로 환급액 미리보기",
@@ -33,12 +34,24 @@ const faq = [
 export default function YearEndPage() {
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: faq.map(({ q, a }) => ({
-      "@type": "Question",
-      name: q,
-      acceptedAnswer: { "@type": "Answer", text: a },
-    })),
+    "@graph": [
+      {
+        "@type": "FAQPage",
+        mainEntity: faq.map(({ q, a }) => ({
+          "@type": "Question",
+          name: q,
+          acceptedAnswer: { "@type": "Answer", text: a },
+        })),
+      },
+      // 검색결과에 "사이트명 > 계산기명" 경로가 표시되도록 한다.
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: SITE_NAME, item: SITE_URL },
+          { "@type": "ListItem", position: 2, name: "연말정산 환급 계산기" },
+        ],
+      },
+    ],
   };
 
   return (
