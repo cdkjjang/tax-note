@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { guides } from "@/lib/guides";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import AdSlot from "@/components/AdSlot";
 
 export const metadata: Metadata = {
   title: "세금 가이드 — 연말정산·종합소득세·부가세·증여세",
@@ -66,6 +67,7 @@ export default function GuideListPage() {
           </li>
         ))}
       </ul>
+      <AdSlot slot="guide-list-bottom" />
     </div>
   );
 }
