@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import { getGuide, guides } from "@/lib/guides";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 import AdSlot from "@/components/AdSlot";
+import HubGuideLink from "@/components/HubGuideLink";
 
 interface Props {
   params: Promise<{ slug: string }>;
@@ -162,6 +163,7 @@ export default async function GuidePage({ params }: Props) {
           </ul>
         </section>
       )}
+      <HubGuideLink />
     </article>
   );
 }
