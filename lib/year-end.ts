@@ -78,7 +78,7 @@ export function calcYearEnd(
 
   // 4대보험료 소득공제(근로자분) 추정 — 국민연금(연금보험료공제) + 건강·장기요양·고용(보험료 특별소득공제)
   const monthlyGross = grossSalary / 12;
-  const pensionBase = Math.min(monthlyGross, 6_370_000); // 국민연금 기준소득월액 상한(2025.7~2026.6)
+  const pensionBase = Math.min(monthlyGross, 6_590_000); // 국민연금 기준소득월액 상한(2026.7~2027.6)
   const nationalPension = pensionBase * 0.045 * 12;
   const health = monthlyGross * 0.03545 * 12;
   const longTermCare = health * 0.1295;
