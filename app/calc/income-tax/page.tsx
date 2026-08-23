@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import CalcGuides from "@/components/CalcGuides";
 import Link from "next/link";
 import IncomeTaxCalculator from "@/components/IncomeTaxCalculator";
 import AdSlot from "@/components/AdSlot";
@@ -200,6 +201,7 @@ export default function IncomeTaxPage() {
           </li>
         </ul>
       </section>
+      <CalcGuides calcHref="/calc/income-tax" />
     </div>
   );
 }

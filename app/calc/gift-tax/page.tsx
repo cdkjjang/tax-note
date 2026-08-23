@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import CalcGuides from "@/components/CalcGuides";
 import Link from "next/link";
 import GiftTaxCalculator from "@/components/GiftTaxCalculator";
 import AdSlot from "@/components/AdSlot";
@@ -195,6 +196,7 @@ export default function GiftTaxPage() {
           </li>
         </ul>
       </section>
+      <CalcGuides calcHref="/calc/gift-tax" />
     </div>
   );
 }
