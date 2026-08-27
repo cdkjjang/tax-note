@@ -1,5 +1,47 @@
 import { describe, expect, it } from "vitest";
-import { calcYearEnd } from "./year-end";
+import { INSURANCE_RATES, calcYearEnd } from "./year-end";
+
+// ─────────────────────────────────────────────────────────────
+// 고시값 고정 테스트
+//
+// 다른 테스트는 요율을 기호로 참조하거나 결과의 상대 관계만 보기 때문에,
+// 요율이 1년 낡아도 전부 통과한다. 실제로 이 파일의 요율 세 개가 직전 연도
+// 값으로 남아 있었는데 30개 테스트가 모두 통과했다.
+// 그래서 **숫자 자체를 리터럴로 박아** 고시가 바뀌면 여기가 먼저 깨지게 한다.
+//
+// ⚠️ 이 값들은 급여노트 salary-note/lib/insurance.ts의 RATES와 같아야 한다.
+// ─────────────────────────────────────────────────────────────
+describe("4대보험 요율 — 급여노트와 같은 값이어야 한다", () => {
+  it("근로자 부담 요율", () => {
+    expect(INSURANCE_RATES.pension).toBe(0.0475); // 국민연금 4.75% (총 9.5%)
+    expect(INSURANCE_RATES.health).toBe(0.03595); // 건강보험 3.595%
+    expect(INSURANCE_RATES.longTermCareOfHealth).toBe(0.1314); // 장기요양 13.14%
+    expect(INSURANCE_RATES.employment).toBe(0.009); // 고용보험 0.9%
+  });
+
+  it("국민연금 기준소득월액 상·하한 (매년 7월 조정)", () => {
+    expect(INSURANCE_RATES.pensionBaseMax).toBe(6_590_000);
+    expect(INSURANCE_RATES.pensionBaseMin).toBe(410_000);
+  });
+
+  it("상한을 넘는 고소득자는 연금보험료가 상한에서 멈춘다", () => {
+    // 두 급여 모두 월 환산액이 기준소득월액 상한(659만)을 넘으므로 연금은 같다.
+    const high = calcYearEnd({ ...base, grossSalary: 200_000_000 });
+    const veryHigh = calcYearEnd({ ...base, grossSalary: 300_000_000 });
+    if (!high.ok || !veryHigh.ok) throw new Error("calc failed");
+
+    // 늘어난 1억에 대해 붙는 것은 건강·장기요양·고용뿐이고 연금은 0이어야 한다.
+    const step = 100_000_000;
+    const health = step * INSURANCE_RATES.health;
+    const expected =
+      health +
+      health * INSURANCE_RATES.longTermCareOfHealth +
+      step * INSURANCE_RATES.employment;
+
+    const delta = veryHigh.result.insuranceDeduction - high.result.insuranceDeduction;
+    expect(delta).toBeCloseTo(expected, 0); // 연금분이 섞이면 여기서 어긋난다
+  });
+});
 
 const base = {
   grossSalary: 50_000_000,

@@ -18,6 +18,27 @@ import {
   incomeTaxByBase,
 } from "./tax-core";
 
+/**
+ * 4대보험 근로자 부담 요율·기준소득월액 상하한.
+ *
+ * ⚠️ **급여노트 `salary-note/lib/insurance.ts`의 `RATES`와 같은 값이어야 한다.**
+ * 두 사이트가 같은 사람에게 다른 답을 내면 안 된다. 예전에 이곳만 갱신되지 않아
+ * 국민연금 4.5% · 건강 3.545% · 장기요양 12.95%(직전 연도 값)로 남아 있었고,
+ * 그 결과 보험료 소득공제가 과소 계산돼 세액이 실제보다 크게 나왔다.
+ *
+ * 갱신 시기 — 요율은 매년 초 고시, 기준소득월액 상·하한은 매년 7월 조정.
+ * 값을 고치면 `year-end.test.ts`의 고시값 고정 테스트와 허브
+ * `lifebanjang-hub/lib/standards.ts`도 함께 확인할 것.
+ */
+export const INSURANCE_RATES = {
+  pension: 0.0475, // 국민연금 근로자 4.75% (총 9.5%) — 연금개혁으로 매년 인상 중
+  pensionBaseMax: 6_590_000, // 기준소득월액 상한 (2026.7~2027.6)
+  pensionBaseMin: 410_000, // 기준소득월액 하한 (2026.7~2027.6)
+  health: 0.03595, // 건강보험 근로자 3.595% (총 7.19%의 절반)
+  longTermCareOfHealth: 0.1314, // 장기요양 = 건강보험료 × 13.14%
+  employment: 0.009, // 고용보험(실업급여) 근로자 0.9%
+} as const;
+
 export interface YearEndInput {
   grossSalary: number; // 총급여 (비과세 제외 연간 급여)
   dependents: number; // 기본공제 대상 인원 (본인 포함, 최소 1)
@@ -78,11 +99,14 @@ export function calcYearEnd(
 
   // 4대보험료 소득공제(근로자분) 추정 — 국민연금(연금보험료공제) + 건강·장기요양·고용(보험료 특별소득공제)
   const monthlyGross = grossSalary / 12;
-  const pensionBase = Math.min(monthlyGross, 6_590_000); // 국민연금 기준소득월액 상한(2026.7~2027.6)
-  const nationalPension = pensionBase * 0.045 * 12;
-  const health = monthlyGross * 0.03545 * 12;
-  const longTermCare = health * 0.1295;
-  const employment = monthlyGross * 0.009 * 12;
+  const pensionBase = Math.min(
+    Math.max(monthlyGross, INSURANCE_RATES.pensionBaseMin),
+    INSURANCE_RATES.pensionBaseMax
+  );
+  const nationalPension = pensionBase * INSURANCE_RATES.pension * 12;
+  const health = monthlyGross * INSURANCE_RATES.health * 12;
+  const longTermCare = health * INSURANCE_RATES.longTermCareOfHealth;
+  const employment = monthlyGross * INSURANCE_RATES.employment * 12;
   const insuranceDeduction = Math.round(
     nationalPension + health + longTermCare + employment
   );
