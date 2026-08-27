@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CalcGuides from "@/components/CalcGuides";
+import NextStep from "@/components/NextStep";
 import RelatedTools from "@/components/RelatedTools";
 import Link from "next/link";
 import GiftTaxCalculator from "@/components/GiftTaxCalculator";
@@ -68,6 +69,8 @@ export default function GiftTaxPage() {
         증여세를 바로 알려드립니다. 혼인·출산 공제도 반영합니다.
       </p>
       <GiftTaxCalculator />
+
+      <NextStep calc="/calc/gift-tax" />
 
       <AdSlot slot="gift-tax-below-tool" />
 

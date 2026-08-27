@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CalcGuides from "@/components/CalcGuides";
+import NextStep from "@/components/NextStep";
 import RelatedTools from "@/components/RelatedTools";
 import Link from "next/link";
 import IncomeTaxCalculator from "@/components/IncomeTaxCalculator";
@@ -68,6 +69,8 @@ export default function IncomeTaxPage() {
         종합소득세와 지방소득세를 미리 확인하세요.
       </p>
       <IncomeTaxCalculator />
+
+      <NextStep calc="/calc/income-tax" />
 
       <AdSlot slot="income-tax-below-tool" />
 

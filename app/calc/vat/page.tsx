@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CalcGuides from "@/components/CalcGuides";
+import NextStep from "@/components/NextStep";
 import RelatedTools from "@/components/RelatedTools";
 import Link from "next/link";
 import VatCalculator from "@/components/VatCalculator";
@@ -64,6 +65,8 @@ export default function VatPage() {
         뽑아내거나, 세액만 알 때 금액을 구합니다. 세율 10% 기준입니다.
       </p>
       <VatCalculator />
+
+      <NextStep calc="/calc/vat" />
 
       <AdSlot slot="vat-below-tool" />
 

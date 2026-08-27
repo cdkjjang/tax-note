@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import CalcGuides from "@/components/CalcGuides";
+import NextStep from "@/components/NextStep";
 import RelatedTools from "@/components/RelatedTools";
 import Link from "next/link";
 import YearEndCalculator from "@/components/YearEndCalculator";
@@ -68,6 +69,8 @@ export default function YearEndPage() {
         돌려받을지 더 낼지, 대략의 금액을 미리 확인할 수 있습니다.
       </p>
       <YearEndCalculator />
+
+      <NextStep calc="/calc/year-end" />
 
       <AdSlot slot="year-end-below-tool" />
 
