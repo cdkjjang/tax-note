@@ -114,11 +114,7 @@ export const guides8: Guide[] = [
         a: "지난 5년 안의 것이라면 경정청구로 가능합니다. 홈택스에서 신청하며, 여러 해치를 한꺼번에 정리할 수도 있습니다.",
       },
     ],
-    related: [
-      "year-end-settlement-guide",
-      "freelancer-33-refund",
-      "income-tax-guide",
-    ],
+    related: ["year-end-settlement-guide", "income-tax-guide"],
     cta: { href: "/calc/year-end", label: "연말정산 환급액 계산하기" },
   },
 ];

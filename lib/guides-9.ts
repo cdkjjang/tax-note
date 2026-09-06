@@ -104,11 +104,7 @@ export const guides9: Guide[] = [
         a: "거절 사유를 통지받으며, 이의가 있으면 불복 절차를 밟을 수 있습니다. 근거 자료가 부족한 경우가 대부분이므로 보완해 다시 신청하는 방법도 있습니다.",
       },
     ],
-    related: [
-      "year-end-settlement-guide",
-      "mid-year-job-change-settlement",
-      "medical-expense-deduction",
-    ],
+    related: ["year-end-settlement-guide", "mid-year-job-change-settlement", "medical-expense-deduction"],
     cta: { href: "/calc/year-end", label: "연말정산 환급액 계산하기" },
   },
 ];

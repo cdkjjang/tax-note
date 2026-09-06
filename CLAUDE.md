@@ -7,7 +7,7 @@
 
 - Next.js 16.2.10 (App Router) + TypeScript + Tailwind CSS 4. DB·로그인·결제 없음, 전부 정적.
 - 개발 서버: 워크스페이스 `.claude/launch.json`의 `tax-note-dev` (포트 3700, preview_start 사용)
-- 빌드: `npm run build` / 테스트: `npm test` (vitest 30개)
+- 빌드: `npm run build` / 테스트: `npm test` (vitest 45개)
 - Node는 포터블: 명령 앞에 `$env:Path = "E:\클로드\tools\node;$env:Path"` 필요
 - 배포: `git push origin main` (Vercel 자동 배포)만 사용. 절차는 `DEPLOY.md`
 - 도메인: tax.lifebanjang.com (허브 lifebanjang-hub의 `lib/notes.ts`에 등록)
@@ -21,7 +21,32 @@
   - `lib/income-tax.ts` 종합소득세 (소득금액→과세표준→산출세액→결정세액+지방세, 기납부와 정산)
   - `lib/vat.ts` 부가가치세 (공급가액↔세액↔합계 3방향, 세율 10% 일반과세)
   - `lib/gift-tax.ts` 증여세 (증여액−관계별 공제→과세표준→세율 10~50%→신고세액공제 3%)
-- 가이드 글 5편: `lib/guides-1.ts`(연말정산·소득/세액공제·종합소득세 3)·`guides-2.ts`(부가세·증여세 2), `lib/guides.ts`(집계)
+- 가이드 글 **20편**: `lib/guides-1.ts`(연말정산·소득/세액공제·종합소득세 3편)·
+  `guides-2.ts`(8편)·`guides-3/4/6~10.ts`·`guides-11.ts`(부가세·증여세 2편), `lib/guides.ts`(집계)
+
+### 2026-09-06 가이드 통합 (26 → 20편)
+
+애드센스가 "가치가 별로 없는 콘텐츠"로 두 번 반려했고, 원인 중 하나가 같은 주제를
+여러 편이 — 심지어 여러 노트가 — 나눠 갖는 구조였다(워크스페이스 CLAUDE.md 8장).
+
+- 같은 노트 안에서 흡수: `year-end-2026-changes` → `year-end-settlement-guide`,
+  `freelancer-33-refund` → `income-tax-guide`, `when-register-business` → `vat-guide`,
+  `family-living-expenses` → `gift-tax-guide`
+- **노트 간 중복 해소** — 이 노트에서 내보낸 것 둘:
+  `car-tax-deduction` → 자동차노트 `car-tax-annual`,
+  `property-tax-guide` → 부동산노트 `property-tax-schedule`
+- ⚠️ **반대로 급여노트가 이 노트로 보내는 301이 있다**
+  (`salary/year-end-settlement` → `year-end-settlement-guide`).
+  **이 슬러그를 바꾸면 급여노트 쪽이 조용히 404가 된다.** 저쪽 테스트로는 못 잡으므로
+  `lib/guides.test.ts`가 이 슬러그의 존재를 명시적으로 고정해 둔다.
+- 사라진 6개 슬러그는 `next.config.ts`의 `redirects()`가 301(308)로 보낸다. **지우지 말 것.**
+- `lib/guides-5.ts`는 비어서 삭제됐다. **번호를 다시 쓰지 말 것** — 새 파일은 `guides-12.ts`부터.
+- `lib/guides.test.ts`가 재발을 막는다 — 본문 하한(1,500자, 공백 제외 실측), 슬러그 중복,
+  없는 글을 가리키는 `related`, 섹션 제목·FAQ 질문 중복, 부제 중복,
+  리다이렉트 출발지가 살아나거나 목적지가 사라지는 경우, 노트 간 리다이렉트 2건의 존재.
+- ⚠️ **글자 수 기준이 두 가지다.** 통합을 결정할 때 쓴 감사 수치는 소스의 문자열
+  리터럴을 세는 느슨한 방식, 테스트의 `bodyLength`는 화면에 나가는 글자를 공백까지 빼고 센다.
+  **감사 기준 2,000자 ≈ 테스트 기준 1,500자.**
 - 계산기 페이지: `app/calc/{year-end,income-tax,vat,gift-tax}/page.tsx` — 각 페이지에 SEO 해설 + FAQPage JSON-LD
 - 애드센스: `components/AdSlot.tsx` — `NEXT_PUBLIC_ADSENSE_CLIENT` 설정 전에는 아무것도 렌더링 안 함
 

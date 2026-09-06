@@ -118,11 +118,7 @@ export const guides10: Guide[] = [
         a: "현금영수증을 발급받은 금액만 잡힙니다. 발급받지 않으면 기록이 남지 않아 공제에 들어가지 않습니다.",
       },
     ],
-    related: [
-      "year-end-settlement-guide",
-      "deduction-vs-credit",
-      "dependent-allocation",
-    ],
+    related: ["year-end-settlement-guide", "deduction-vs-credit", "dependent-allocation"],
     cta: { href: "/calc/year-end", label: "연말정산 예상 세액 계산하기" },
   },
 ];
