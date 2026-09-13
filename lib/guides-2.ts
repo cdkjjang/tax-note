@@ -4,7 +4,7 @@ import type { Guide } from "./guide-types";
 export const guides2: Guide[] = [
   {
     slug: "side-income-tax",
-    title: "부업·N잡러 세금 총정리 — 배달·블로그·중고거래 수익은 신고 대상일까",
+    title: "부업·N잡러 세금 총정리 — 배달·블로그·중고거래 수익 신고",
     description:
       "본업 외에 배달, 유튜브·블로그 수익, 스마트스토어, 중고거래로 돈을 벌었을 때 어디까지가 신고 대상인지, 연말정산과 5월 종합소득세는 어떻게 이어지는지, 회사에 알려질까 걱정되는 부분까지 정리했습니다.",
     updated: "2026-07-29",
