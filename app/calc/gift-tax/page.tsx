@@ -107,7 +107,7 @@ export default function GiftTaxPage() {
       </section>
 
       <CalcNotes
-        updated="2026-08-02"
+        updated="2026-08-06"
         basis={[
           {
             law: "상속세 및 증여세법 제53조 (증여재산공제)",

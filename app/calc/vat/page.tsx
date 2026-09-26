@@ -102,7 +102,7 @@ export default function VatPage() {
       </section>
 
       <CalcNotes
-        updated="2026-08-02"
+        updated="2026-08-06"
         basis={[
           {
             law: "부가가치세법 제30조 (세율)",

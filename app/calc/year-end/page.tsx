@@ -107,7 +107,7 @@ export default function YearEndPage() {
       </section>
 
       <CalcNotes
-        updated="2026-08-02"
+        updated="2026-08-27"
         basis={[
           {
             law: "소득세법 제47조 (근로소득공제)",

@@ -107,7 +107,7 @@ export default function IncomeTaxPage() {
       </section>
 
       <CalcNotes
-        updated="2026-08-02"
+        updated="2026-08-06"
         basis={[
           {
             law: "소득세법 제14조 (과세표준의 계산)",
