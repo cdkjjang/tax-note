@@ -104,10 +104,10 @@ export default function AboutPage() {
       <p>
         {SITE_NAME}는 생활반장(lifebanjang.com) 노트 시리즈의 하나입니다. 문의는{" "}
         <a
-          href="mailto:cdkjjang@gmail.com"
+          href="mailto:lifebanjang1004@naver.com"
           className="text-accent underline-offset-4 hover:underline"
         >
-          cdkjjang@gmail.com
+          lifebanjang1004@naver.com
         </a>
         으로 보내주세요.
       </p>
