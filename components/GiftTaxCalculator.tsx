@@ -84,7 +84,12 @@ export default function GiftTaxCalculator() {
           <p className="text-3xl font-extrabold text-accent-strong">
             {formatWon(outcome.result.payableTax)}
           </p>
-          {outcome.result.taxBase > 0 ? (
+          {outcome.result.taxBase > 0 && outcome.result.calculatedTax === 0 ? (
+            <p className="mt-1 text-sm text-muted">
+              과세표준 {formatWon(outcome.result.taxBase)} — 50만원 미만이라
+              증여세를 부과하지 않습니다(과세최저한).
+            </p>
+          ) : outcome.result.taxBase > 0 ? (
             <p className="mt-1 text-sm text-muted">
               과세표준 {formatWon(outcome.result.taxBase)} · 적용세율{" "}
               {outcome.result.ratePct}%

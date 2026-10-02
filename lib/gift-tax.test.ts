@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { calcGiftTax } from "./gift-tax";
+import { RELATION_DEDUCTION, RELATION_LABEL, calcGiftTax } from "./gift-tax";
 
 describe("calcGiftTax — 증여세", () => {
   it("성년 자녀에게 5억 증여: 공제 5천만, 산출세액 8,000만", () => {
@@ -53,6 +53,21 @@ describe("calcGiftTax — 증여세", () => {
     expect(out.ok).toBe(true);
     if (!out.ok) return;
     expect(out.result.marriageDeduction).toBe(0);
+  });
+
+  it("과세표준 50만원 미만이면 세금이 없다 (상증법 제55조②)", () => {
+    const small = calcGiftTax({ giftAmount: 50_490_000, relation: "linealAdult", marriageBirth: false });
+    expect(small.ok && small.result.taxBase).toBe(490_000);
+    expect(small.ok && small.result.payableTax).toBe(0);
+    const edge = calcGiftTax({ giftAmount: 50_500_000, relation: "linealAdult", marriageBirth: false });
+    // 과세표준 50만원 → 5만원 × (1 − 3%) = 48,500원
+    expect(edge.ok && edge.result.payableTax).toBe(48_500);
+  });
+
+  it("기타 친족 공제 1천만원, 표시는 4촌 혈족·3촌 인척 (제53조 4호)", () => {
+    expect(RELATION_DEDUCTION.relative).toBe(10_000_000);
+    expect(RELATION_LABEL.relative).toContain("4촌");
+    expect(RELATION_LABEL.relative).not.toContain("6촌");
   });
 
   it("미성년 자녀 1억 증여: 공제 2천만, 과세표준 8천만 × 10%", () => {

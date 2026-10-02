@@ -7,7 +7,7 @@
 
 - Next.js 16.2.10 (App Router) + TypeScript + Tailwind CSS 4. DB·로그인·결제 없음, 전부 정적.
 - 개발 서버: 워크스페이스 `.claude/launch.json`의 `tax-note-dev` (포트 3700, preview_start 사용)
-- 빌드: `npm run build` / 테스트: `npm test` (vitest 45개)
+- 빌드: `npm run build` / 테스트: `npm test` (vitest 54개)
 - Node는 포터블: 명령 앞에 `$env:Path = "E:\클로드\tools\node;$env:Path"` 필요
 - 배포: `git push origin main` (Vercel 자동 배포)만 사용. 절차는 `DEPLOY.md`
 - 도메인: tax.lifebanjang.com (허브 lifebanjang-hub의 `lib/notes.ts`에 등록)
@@ -49,6 +49,25 @@
   **감사 기준 2,000자 ≈ 테스트 기준 1,500자.**
 - 계산기 페이지: `app/calc/{year-end,income-tax,vat,gift-tax}/page.tsx` — 각 페이지에 SEO 해설 + FAQPage JSON-LD
 - 애드센스: `components/AdSlot.tsx` — `NEXT_PUBLIC_ADSENSE_CLIENT` 설정 전에는 아무것도 렌더링 안 함
+
+### 2026-10-02 법조문 전수 대조
+
+소득세법(2026-07-01 시행본)·시행령·상증법·조특법 원문을 law.go.kr에서 받아 계산기와
+가이드 20편을 대조했다. 엔진 값(세율·근로소득공제·세액공제 한도·4대보험 요율)은 맞았고,
+틀린 곳은 그 주변에 있었다. 상세는 `lib/editorial.ts`의 같은 제목 섹션.
+
+- `lib/gift-tax.ts` — **과세최저한(과세표준 50만원 미만 0원, 상증법 제55조②)** 추가,
+  기타 친족 표시 "6촌 혈족·4촌 인척" → **4촌 혈족·3촌 인척**(제53조 4호). 테스트로 고정.
+- `app/calc/year-end/page.tsx` 풀이 예시 — **8월 요율 갱신 때 예시만 옛 요율로 남아** 있었다
+  (보험료 공제 4,702,039 → 4,858,692, 환급 1,560 → 25,060원). ⚠️ **요율을 바꾸면 이 예시도
+  엔진으로 다시 계산할 것.** 예시는 상수를 참조하지 않는 리터럴이라 테스트가 못 잡는다.
+- `rental-income-tax` — 2026년 귀속부터 **2주택도 간주임대료 과세 가능**(기준시가 12억 초과
+  2채 · 보증금 합계 12억 초과, 소득세법 제25조①2호 + 시행령 제53조①). 소형주택 제외 특례는
+  **2026-12-31 기한** — 2027년 초에 연장 여부 확인.
+- `year-end-settlement-guide` — 자녀세액공제 나이 단계(2026 9세 → 2030 13세 이상, 2026.4.21
+  개정 부칙 제2조). 아동수당 지급 연령과 같은 일정이라 **2030년까지 매년 1월 대조**.
+- `crypto-stock-tax` — 가상자산 과세 시행일 **2027-01-01**(부칙, 2024.12.31 개정). 또 유예되면 고칠 것.
+- `donation-deduction` 특례·일반기부금 명칭, `mid-year-job-change-settlement` 퇴사 후 의료비 문장.
 
 ## 주의사항 (개정 시 값·테스트 함께 갱신)
 

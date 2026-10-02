@@ -12,7 +12,7 @@ export type GiftRelation =
   | "linealAdult" // 직계존속 → 성년 직계비속
   | "linealMinor" // 직계존속 → 미성년 직계비속
   | "linealUp" // 직계비속 → 직계존속
-  | "relative" // 기타 친족 (6촌 이내 혈족, 4촌 이내 인척)
+  | "relative" // 기타 친족 (4촌 이내 혈족, 3촌 이내 인척 — 상증법 제53조 4호)
   | "other"; // 그 외 (타인)
 
 export const RELATION_DEDUCTION: Record<GiftRelation, number> = {
@@ -29,12 +29,21 @@ export const RELATION_LABEL: Record<GiftRelation, string> = {
   linealAdult: "성년 자녀 (직계존속→비속)",
   linealMinor: "미성년 자녀 (직계존속→비속)",
   linealUp: "부모 (직계비속→존속)",
-  relative: "기타 친족 (6촌 이내)",
+  relative: "기타 친족 (4촌 이내 혈족·3촌 이내 인척)",
   other: "타인",
 };
 
 /** 혼인·출산 증여재산공제 (2024년 신설) — 직계존속으로부터, 별도 한도 1억 */
 export const MARRIAGE_BIRTH_DEDUCTION = 100_000_000;
+
+/**
+ * 과세최저한 — 과세표준이 50만원 미만이면 증여세를 부과하지 않는다 (상증법 제55조②).
+ * 2026-10-02 점검 전에는 이 규정이 없어 과세표준 몇만 원에도 세액을 냈다.
+ */
+export const GIFT_TAX_MINIMUM_BASE = 500_000;
+
+// ⚠️ 기타 친족 공제(1천만원)의 범위는 **4촌 이내 혈족·3촌 이내 인척**이다(제53조 4호).
+//    2026-10-02 점검 전 화면은 "6촌 이내"라고 적고 있었다.
 
 // 증여세율 (상속세및증여세법 제56조) — 과세표준 구간별 세율·누진공제
 export const GIFT_BRACKETS = [
@@ -90,7 +99,7 @@ export function calcGiftTax(
     0,
     giftAmount - relationDeduction - marriageDeduction
   );
-  const calculatedTax = giftTaxByBase(taxBase);
+  const calculatedTax = taxBase < GIFT_TAX_MINIMUM_BASE ? 0 : giftTaxByBase(taxBase);
   const filingCredit = Math.round(calculatedTax * 0.03);
   const payableTax = Math.max(0, calculatedTax - filingCredit);
   const bracket = GIFT_BRACKETS.find((x) => taxBase <= x.limit)!;
