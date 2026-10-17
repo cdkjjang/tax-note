@@ -9,7 +9,7 @@ import CalcNotes from "@/components/CalcNotes";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "연말정산 환급 계산기 — 총급여·공제로 환급액 미리보기",
+  title: "연말정산 계산기 — 총급여·공제로 환급액 미리보기",
   description:
     "총급여와 부양가족, 신용카드·연금저축·의료비 등 공제만 넣으면 연말정산 환급금 또는 추가납부 예상액을 바로 계산합니다. 2026년 기준 간이 계산기.",
   alternates: { canonical: "/calc/year-end" },
