@@ -7,7 +7,7 @@
 
 - Next.js 16.2.10 (App Router) + TypeScript + Tailwind CSS 4. DB·로그인·결제 없음, 전부 정적.
 - 개발 서버: 워크스페이스 `.claude/launch.json`의 `tax-note-dev` (포트 3700, preview_start 사용)
-- 빌드: `npm run build` / 테스트: `npm test` (vitest 54개)
+- 빌드: `npm run build` / 테스트: `npm test` (vitest 56개)
 - Node는 포터블: 명령 앞에 `$env:Path = "E:\클로드\tools\node;$env:Path"` 필요
 - 배포: `git push origin main` (Vercel 자동 배포)만 사용. 절차는 `DEPLOY.md`
 - 도메인: tax.lifebanjang.com (허브 lifebanjang-hub의 `lib/notes.ts`에 등록)
