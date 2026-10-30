@@ -70,9 +70,9 @@ export default function YearEndPage() {
       </p>
       <YearEndCalculator />
 
-      <NextStep calc="/calc/year-end" />
-
       <AdSlot slot="year-end-below-tool" />
+
+      <NextStep calc="/calc/year-end" />
 
       <section className="mt-10 space-y-4 text-[15px] leading-relaxed">
         <h2 className="text-xl font-bold">환급과 추가납부는 이렇게 갈립니다</h2>

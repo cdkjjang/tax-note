@@ -70,9 +70,9 @@ export default function GiftTaxPage() {
       </p>
       <GiftTaxCalculator />
 
-      <NextStep calc="/calc/gift-tax" />
-
       <AdSlot slot="gift-tax-below-tool" />
+
+      <NextStep calc="/calc/gift-tax" />
 
       <section className="mt-10 space-y-4 text-[15px] leading-relaxed">
         <h2 className="text-xl font-bold">증여세, 공제 한도를 알면 줄어듭니다</h2>

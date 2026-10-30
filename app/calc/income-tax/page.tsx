@@ -70,9 +70,9 @@ export default function IncomeTaxPage() {
       </p>
       <IncomeTaxCalculator />
 
-      <NextStep calc="/calc/income-tax" />
-
       <AdSlot slot="income-tax-below-tool" />
+
+      <NextStep calc="/calc/income-tax" />
 
       <section className="mt-10 space-y-4 text-[15px] leading-relaxed">
         <h2 className="text-xl font-bold">3.3% 떼였는데 왜 또 낼까</h2>

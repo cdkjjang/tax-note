@@ -66,9 +66,9 @@ export default function VatPage() {
       </p>
       <VatCalculator />
 
-      <NextStep calc="/calc/vat" />
-
       <AdSlot slot="vat-below-tool" />
+
+      <NextStep calc="/calc/vat" />
 
       <section className="mt-10 space-y-4 text-[15px] leading-relaxed">
         <h2 className="text-xl font-bold">공급가액·부가세·합계, 헷갈리지 않기</h2>
