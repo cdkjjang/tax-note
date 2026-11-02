@@ -9,7 +9,7 @@ const DEP_OPTIONS = [1, 2, 3, 4, 5, 6];
 const MAN = 10_000;
 
 const selectClass =
-  "w-full rounded-xl border border-border-soft bg-card px-4 py-2.5 text-[15px] outline-none transition-colors focus:border-accent";
+  "w-full rounded-xl border border-border-soft bg-card px-4 py-2.5 text-base outline-none transition-colors focus:border-accent";
 
 export default function YearEndCalculator() {
   const [salary, setSalary] = useState(""); // 총급여, 만원

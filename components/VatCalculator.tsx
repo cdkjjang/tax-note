@@ -33,7 +33,7 @@ export default function VatCalculator() {
               aria-pressed={mode === m.key}
               className={`rounded-xl border px-2 py-2 text-sm font-semibold transition-colors ${
                 mode === m.key
-                  ? "border-accent bg-accent text-white"
+                  ? "border-accent bg-accent text-on-accent"
                   : "border-border-soft hover:border-accent"
               }`}
             >

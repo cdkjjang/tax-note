@@ -14,7 +14,7 @@ const MAN = 10_000;
 const RELATIONS = Object.keys(RELATION_LABEL) as GiftRelation[];
 
 const selectClass =
-  "w-full rounded-xl border border-border-soft bg-card px-4 py-2.5 text-[15px] outline-none transition-colors focus:border-accent";
+  "w-full rounded-xl border border-border-soft bg-card px-4 py-2.5 text-base outline-none transition-colors focus:border-accent";
 
 export default function GiftTaxCalculator() {
   const [amount, setAmount] = useState(""); // 증여액, 만원
