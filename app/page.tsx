@@ -91,7 +91,7 @@ export default function HomePage() {
       <section className="mt-12">
         <div className="mb-4 flex items-baseline justify-between">
           <h2 className="text-xl font-bold">세금 가이드</h2>
-          <Link href="/guide" className="text-sm text-accent hover:underline">
+          <Link href="/guide" className="-my-1.5 inline-block py-1.5 text-sm text-accent hover:underline">
             전체 보기 →
           </Link>
         </div>
