@@ -1,0 +1,7 @@
+User-Agent: *
+Allow: /
+
+#다음 웹마스터 도구 소유확인 (webmaster.daum.net)
+#DaumWebMasterTool:8076ff0f9b6b57adda0650dc555886a43c76ab9f819ca07d00f6ffcbfce16973:CNSJIIGOISrSV2aL3hPlgQ==
+
+Sitemap: https://tax.lifebanjang.com/sitemap.xml
