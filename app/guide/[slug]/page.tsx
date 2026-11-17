@@ -55,6 +55,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       title: guide.title,
       description: guide.description,
       type: "article",
+      // 레이아웃의 openGraph를 통째로 덮으므로 사이트 이름·언어·주소를 다시 적는다(2026-11-17).
+      siteName: SITE_NAME,
+      locale: "ko_KR",
+      url: `${SITE_URL}/guide/${guide.slug}`,
     },
   };
 }
