@@ -4,10 +4,10 @@
 //   총급여 → 근로소득공제 → 근로소득금액
 //   소득공제: 인적공제 + 4대보험료(추정) + 신용카드등 사용액 공제
 //   → 과세표준 → 기본세율 산출세액
-//   세액공제: 근로소득세액공제 + 연금계좌 + 보장성보험료 + 의료비 + 기부금
+//   세액공제: 근로소득세액공제 + 자녀 + 혼인 + 연금계좌 + 보장성보험료 + 의료비 + 기부금
 //   → 결정세액(소득세) → 기납부(원천징수)세액과 비교 → 환급/추가납부
 //
-// ⚠️ 실제 연말정산은 주택자금·월세·교육비·자녀·기부금 유형별 한도 등 항목이 훨씬 많다.
+// ⚠️ 실제 연말정산은 주택자금·월세·교육비·기부금 유형별 한도 등 항목이 훨씬 많다.
 //    이 계산기는 대표 공제만 반영한 '간이 추정치'이며, 결과는 소득세 기준이다.
 //    지방소득세(결정세액의 10%)는 별도로 함께 정산된다.
 
@@ -39,6 +39,34 @@ export const INSURANCE_RATES = {
   employment: 0.009, // 고용보험(실업급여) 근로자 0.9%
 } as const;
 
+/**
+ * 자녀세액공제(소득세법 제59조의2) — 2026-10-02 원문 대조 값. 가이드 `guides-1.ts`와 같은 값이어야 한다.
+ * - 기본: 1명 25만 · 2명 55만 · 3명 이상 55만 + 셋째부터 1명당 40만
+ * - 출산·입양(그해): 첫째 30만 · 둘째 50만 · 셋째 이상 70만
+ * - 대상 나이: 2026년 귀속은 **9세 이상**(2026.4.21 개정 부칙 제2조 — 2030년 13세 이상까지 해마다 오름).
+ *   나이 판정은 입력하는 사람이 하고(화면 안내), 엔진은 대상 자녀 수만 받는다.
+ */
+export const CHILD_CREDIT = {
+  one: 250_000,
+  two: 550_000,
+  perExtra: 400_000, // 셋째부터 1명당
+  newborn: [0, 300_000, 500_000, 700_000] as const, // [없음, 첫째, 둘째, 셋째 이상]
+} as const;
+
+/**
+ * 혼인세액공제(조세특례제한법 제92조) — 2024.1.1~2026.12.31 혼인신고, 1인 생애 1회 50만원.
+ * 부부가 각자 받는다(이 계산기는 본인 1명분). 2026-11-13 원문 확인.
+ */
+export const MARRIAGE_CREDIT = 500_000;
+
+export function childTaxCredit(children: number, newbornOrder: 0 | 1 | 2 | 3 = 0): number {
+  const n = Math.max(0, Math.floor(children));
+  let base = 0;
+  if (n === 1) base = CHILD_CREDIT.one;
+  else if (n >= 2) base = CHILD_CREDIT.two + Math.max(0, n - 2) * CHILD_CREDIT.perExtra;
+  return base + CHILD_CREDIT.newborn[newbornOrder];
+}
+
 export interface YearEndInput {
   grossSalary: number; // 총급여 (비과세 제외 연간 급여)
   dependents: number; // 기본공제 대상 인원 (본인 포함, 최소 1)
@@ -48,6 +76,9 @@ export interface YearEndInput {
   insurancePremium: number; // 보장성보험료 납입액
   medicalExpense: number; // 의료비 지출액
   donation: number; // 기부금
+  childCount?: number; // 자녀세액공제 대상 자녀 수(2026년 귀속: 9세 이상 기본공제 대상)
+  newbornOrder?: 0 | 1 | 2 | 3; // 올해 출산·입양한 자녀의 순서(없음 0, 셋째 이상 3)
+  marriageCredit?: boolean; // 2024~2026년 혼인신고(본인 생애 1회)
 }
 
 export interface YearEndResult {
@@ -59,6 +90,8 @@ export interface YearEndResult {
   calculatedTax: number; // 산출세액
   credits: {
     earned: number; // 근로소득세액공제
+    child: number; // 자녀세액공제
+    marriage: number; // 혼인세액공제
     pension: number; // 연금계좌 세액공제
     insurance: number; // 보장성보험료 세액공제
     medical: number; // 의료비 세액공제
@@ -133,6 +166,10 @@ export function calcYearEnd(
   // --- 세액공제 ---
   const earnedCredit = earnedIncomeTaxCredit(calculatedTax, grossSalary);
 
+  // 자녀·혼인 세액공제 — 정액
+  const childCredit = childTaxCredit(input.childCount ?? 0, input.newbornOrder ?? 0);
+  const marriageCredit = input.marriageCredit ? MARRIAGE_CREDIT : 0;
+
   // 연금계좌(연금저축+IRP) 세액공제 — 통합 한도 900만, 총급여 5,500만 이하 15% / 초과 12%
   const pensionRate = grossSalary <= 55_000_000 ? 0.15 : 0.12;
   const pensionCredit = Math.min(pensionSavings, 9_000_000) * pensionRate;
@@ -151,6 +188,8 @@ export function calcYearEnd(
 
   const creditTotal = Math.round(
     earnedCredit +
+      childCredit +
+      marriageCredit +
       pensionCredit +
       insuranceCredit +
       medicalCredit +
@@ -172,6 +211,8 @@ export function calcYearEnd(
       calculatedTax: floor10(calculatedTax),
       credits: {
         earned: Math.round(earnedCredit),
+        child: childCredit,
+        marriage: marriageCredit,
         pension: Math.round(pensionCredit),
         insurance: Math.round(insuranceCredit),
         medical: Math.round(medicalCredit),

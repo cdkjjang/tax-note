@@ -7,6 +7,7 @@ import VatCalculator from "@/components/VatCalculator";
 import AdSlot from "@/components/AdSlot";
 import CalcNotes from "@/components/CalcNotes";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { jsonLdScript } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "부가가치세 계산기 — 공급가액·세액·합계 10% 자동 계산",
@@ -57,7 +58,7 @@ export default function VatPage() {
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
       />
       <h1 className="mb-2 text-2xl font-extrabold">부가가치세 계산기</h1>
       <p className="mb-6 text-muted">

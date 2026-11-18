@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { INSURANCE_RATES, calcYearEnd } from "./year-end";
+import { CHILD_CREDIT, INSURANCE_RATES, MARRIAGE_CREDIT, calcYearEnd, childTaxCredit } from "./year-end";
 
 // ─────────────────────────────────────────────────────────────
 // 고시값 고정 테스트
@@ -102,5 +102,50 @@ describe("calcYearEnd — 연말정산", () => {
 
   it("총급여 0 이하는 에러", () => {
     expect(calcYearEnd({ ...base, grossSalary: 0 }).ok).toBe(false);
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// 자녀·혼인 세액공제 (2026-11-20) — 법정 금액을 리터럴로 고정한다.
+// 소득세법 제59조의2(2026-10-02 원문 대조) · 조세특례제한법 제92조(2026-11-13 원문 확인).
+// 값이 바뀌면 가이드 guides-1.ts·guides-4.ts와 계산기 페이지 FAQ도 함께 고칠 것.
+// ─────────────────────────────────────────────────────────────
+describe("자녀·혼인 세액공제", () => {
+  it("법정 금액 고정", () => {
+    expect(CHILD_CREDIT.one).toBe(250_000);
+    expect(CHILD_CREDIT.two).toBe(550_000);
+    expect(CHILD_CREDIT.perExtra).toBe(400_000);
+    expect([...CHILD_CREDIT.newborn]).toEqual([0, 300_000, 500_000, 700_000]);
+    expect(MARRIAGE_CREDIT).toBe(500_000);
+  });
+
+  it("자녀 수별 공제액", () => {
+    expect(childTaxCredit(0)).toBe(0);
+    expect(childTaxCredit(1)).toBe(250_000);
+    expect(childTaxCredit(2)).toBe(550_000);
+    expect(childTaxCredit(3)).toBe(950_000);
+    expect(childTaxCredit(4)).toBe(1_350_000);
+    expect(childTaxCredit(1, 2)).toBe(750_000); // 1명 + 올해 둘째 출산
+  });
+
+  it("세액공제 합계와 결정세액에 반영된다", () => {
+    const input = {
+      grossSalary: 50_000_000,
+      dependents: 2,
+      prepaidTax: 2_000_000,
+      cardSpending: 0,
+      pensionSavings: 0,
+      insurancePremium: 0,
+      medicalExpense: 0,
+      donation: 0,
+    };
+    const before = calcYearEnd(input);
+    const after = calcYearEnd({ ...input, childCount: 1, marriageCredit: true });
+    expect(before.ok && after.ok).toBe(true);
+    if (!before.ok || !after.ok) return;
+    expect(after.result.credits.child).toBe(250_000);
+    expect(after.result.credits.marriage).toBe(500_000);
+    expect(after.result.credits.total - before.result.credits.total).toBe(750_000);
+    expect(after.result.settlement - before.result.settlement).toBe(750_000);
   });
 });

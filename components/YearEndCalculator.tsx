@@ -6,6 +6,13 @@ import { formatWon } from "@/lib/date";
 import { calcYearEnd } from "@/lib/year-end";
 
 const DEP_OPTIONS = [1, 2, 3, 4, 5, 6];
+const CHILD_OPTIONS = [0, 1, 2, 3, 4];
+const NEWBORN_OPTIONS: { value: 0 | 1 | 2 | 3; label: string }[] = [
+  { value: 0, label: "없음" },
+  { value: 1, label: "첫째" },
+  { value: 2, label: "둘째" },
+  { value: 3, label: "셋째 이상" },
+];
 const MAN = 10_000;
 
 const selectClass =
@@ -20,6 +27,9 @@ export default function YearEndCalculator() {
   const [insurance, setInsurance] = useState(""); // 보장성보험료, 만원
   const [medical, setMedical] = useState(""); // 의료비, 만원
   const [donation, setDonation] = useState(""); // 기부금, 만원
+  const [children, setChildren] = useState("0"); // 자녀세액공제 대상(9세 이상)
+  const [newborn, setNewborn] = useState<0 | 1 | 2 | 3>(0); // 올해 출산·입양
+  const [married, setMarried] = useState(false); // 2024~2026 혼인신고
 
   const salaryMan = parseMoney(salary);
   const ready = salaryMan !== null && salaryMan > 0;
@@ -34,6 +44,9 @@ export default function YearEndCalculator() {
         insurancePremium: (parseMoney(insurance) ?? 0) * MAN,
         medicalExpense: (parseMoney(medical) ?? 0) * MAN,
         donation: (parseMoney(donation) ?? 0) * MAN,
+        childCount: Number(children),
+        newbornOrder: newborn,
+        marriageCredit: married,
       })
     : null;
 
@@ -88,6 +101,51 @@ export default function YearEndCalculator() {
         <MoneyField label="기부금" unit="만원" value={donation} onChange={setDonation} placeholder="0" />
       </div>
 
+      <div className="mb-5 grid grid-cols-2 gap-3">
+        <label className="block">
+          <span className="mb-1.5 block font-bold">
+            자녀 수
+            <span className="ml-1 block text-xs font-normal text-muted sm:inline">2026년은 9세 이상만</span>
+          </span>
+          <select className={selectClass} value={children} onChange={(e) => setChildren(e.target.value)}>
+            {CHILD_OPTIONS.map((c) => (
+              <option key={c} value={c}>
+                {c}명
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="block">
+          <span className="mb-1.5 block font-bold">
+            올해 출산·입양
+            <span className="ml-1 block text-xs font-normal text-muted sm:inline">그 아이가 몇째</span>
+          </span>
+          <select
+            className={selectClass}
+            value={newborn}
+            onChange={(e) => setNewborn(Number(e.target.value) as 0 | 1 | 2 | 3)}
+          >
+            {NEWBORN_OPTIONS.map((o) => (
+              <option key={o.value} value={o.value}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
+      <label className="mb-5 flex min-h-[44px] items-center gap-3">
+        <input
+          type="checkbox"
+          className="h-5 w-5 accent-[var(--accent)]"
+          checked={married}
+          onChange={(e) => setMarried(e.target.checked)}
+        />
+        <span>
+          <span className="font-bold">2024~2026년에 혼인신고를 했어요</span>
+          <span className="block text-xs text-muted">혼인세액공제 50만원 · 생애 1회, 부부가 각자</span>
+        </span>
+      </label>
+
       {!ready && (
         <p className="text-sm text-muted">총급여를 입력하면 바로 계산됩니다.</p>
       )}
@@ -131,6 +189,12 @@ export default function YearEndCalculator() {
               세액공제 −{formatWon(outcome.result.credits.total)}
             </p>
             <Row label="· 근로소득세액공제" value={formatWon(outcome.result.credits.earned)} />
+            {outcome.result.credits.child > 0 && (
+              <Row label="· 자녀" value={formatWon(outcome.result.credits.child)} />
+            )}
+            {outcome.result.credits.marriage > 0 && (
+              <Row label="· 혼인" value={formatWon(outcome.result.credits.marriage)} />
+            )}
             {outcome.result.credits.pension > 0 && (
               <Row label="· 연금계좌" value={formatWon(outcome.result.credits.pension)} />
             )}

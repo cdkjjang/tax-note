@@ -7,6 +7,7 @@ import IncomeTaxCalculator from "@/components/IncomeTaxCalculator";
 import AdSlot from "@/components/AdSlot";
 import CalcNotes from "@/components/CalcNotes";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { jsonLdScript } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "종합소득세 계산기 — 소득금액으로 세액·5월 정산 미리보기",
@@ -61,7 +62,7 @@ export default function IncomeTaxPage() {
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
       />
       <h1 className="mb-2 text-2xl font-extrabold">종합소득세 계산기</h1>
       <p className="mb-6 text-muted">

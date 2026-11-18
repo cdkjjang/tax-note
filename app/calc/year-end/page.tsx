@@ -7,6 +7,7 @@ import YearEndCalculator from "@/components/YearEndCalculator";
 import AdSlot from "@/components/AdSlot";
 import CalcNotes from "@/components/CalcNotes";
 import { SITE_NAME, SITE_URL } from "@/lib/site";
+import { jsonLdScript } from "@/lib/json-ld";
 
 export const metadata: Metadata = {
   title: "연말정산 계산기 — 총급여·공제로 환급액 미리보기",
@@ -26,7 +27,7 @@ const faq = [
   },
   {
     q: "이 계산기와 홈택스 결과가 다를 수 있나요?",
-    a: "네. 이 계산기는 대표 공제(인적·4대보험·신용카드·연금계좌·보험료·의료비·기부금)만 반영한 간이 추정입니다. 자녀·주택자금·월세·교육비 세액공제와 신용카드 결제수단별 공제율은 반영하지 않아, 정확한 값은 홈택스 연말정산 미리보기에서 확인해야 합니다.",
+    a: "네. 이 계산기는 대표 공제(인적·4대보험·신용카드·자녀·혼인·연금계좌·보험료·의료비·기부금)만 반영한 간이 추정입니다. 주택자금·월세·교육비 세액공제와 신용카드 결제수단별 공제율은 반영하지 않아, 정확한 값은 홈택스 연말정산 미리보기에서 확인해야 합니다.",
   },
   {
     q: "연금저축을 넣으면 정말 환급이 늘어나나요?",
@@ -61,7 +62,7 @@ export default function YearEndPage() {
     <div>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(jsonLd) }}
       />
       <h1 className="mb-2 text-2xl font-extrabold">연말정산 환급 계산기</h1>
       <p className="mb-6 text-muted">
@@ -130,10 +131,10 @@ export default function YearEndPage() {
           {
             law: "소득세법 제59조·제59조의3·제59조의4 (세액공제)",
             detail:
-              "산출세액에서 근로소득세액공제, 연금계좌 세액공제, 보장성보험료, 의료비, 기부금 세액공제를 뺍니다. 의료비는 총급여의 3%를 초과한 금액부터 대상이 됩니다.",
+              "산출세액에서 근로소득세액공제, 자녀 세액공제(1명 25만·2명 55만·셋째부터 1명당 40만, 2026년은 9세 이상), 혼인세액공제(2024~2026년 혼인신고 50만), 연금계좌 세액공제, 보장성보험료, 의료비, 기부금 세액공제를 뺍니다. 의료비는 총급여의 3%를 초과한 금액부터 대상이 됩니다.",
           },
         ]}
-        note="자녀 세액공제, 주택자금·월세 세액공제, 교육비 공제, 신용카드 결제 수단별 세분화는 반영하지 않은 간이 추정입니다. 실제 환급액은 국세청 연말정산 미리보기나 회사 정산 결과로 확인하세요. 소득 정보는 서버로 전송되지 않고 브라우저 안에서만 계산됩니다."
+        note="주택자금·월세 세액공제, 교육비 공제, 신용카드 결제 수단별 세분화는 반영하지 않은 간이 추정입니다. 실제 환급액은 국세청 연말정산 미리보기나 회사 정산 결과로 확인하세요. 소득 정보는 서버로 전송되지 않고 브라우저 안에서만 계산됩니다."
         examples={[
           {
             title: "총급여 5,000만원 · 부양가족 본인 1명 · 기납부세액 200만원 · 카드 2,000만원 · 연금저축 300만원 · 보험료 100만원 · 의료비 200만원",
